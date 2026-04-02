@@ -10,16 +10,25 @@ CONFIG_DIR_NAME = "OnenexiumAgent"
 CONFIG_FILE_NAME = "config.json"
 
 
-def get_user_config_path() -> Path:
-    """Per-user JSON config (survives upgrades; not in Program Files)."""
+def get_agent_data_dir() -> Path:
+    """Directory for config.json, agent.log, watchdog script, etc."""
     if sys.platform == "win32":
         appdata = os.environ.get("APPDATA")
         if appdata:
-            return Path(appdata) / CONFIG_DIR_NAME / CONFIG_FILE_NAME
+            return Path(appdata) / CONFIG_DIR_NAME
     xdg = os.environ.get("XDG_CONFIG_HOME")
     if xdg:
-        return Path(xdg) / "onenexium-agent" / CONFIG_FILE_NAME
-    return Path.home() / ".config" / "onenexium-agent" / CONFIG_FILE_NAME
+        return Path(xdg) / "onenexium-agent"
+    return Path.home() / ".config" / "onenexium-agent"
+
+
+def get_user_config_path() -> Path:
+    """Per-user JSON config (survives upgrades; not in Program Files)."""
+    return get_agent_data_dir() / CONFIG_FILE_NAME
+
+
+def get_agent_log_path() -> Path:
+    return get_agent_data_dir() / "agent.log"
 
 
 def load_user_config_file() -> dict[str, Any]:

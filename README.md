@@ -73,7 +73,10 @@ onenexium-agent once
 
 ## Windows exe (double-click)
 
-See **[packaging/README-WINDOWS.md](packaging/README-WINDOWS.md)** — build `dist/OnenexiumAgent.exe` with PyInstaller. Double-click = `run`; use `OnenexiumAgent.exe configure` for setup only.
+See **[packaging/README-WINDOWS.md](packaging/README-WINDOWS.md)** — build `dist/OnenexiumAgent.exe` with PyInstaller (no console window; logs in `%APPDATA%\OnenexiumAgent\agent.log`).
+
+- Double-click = `run`; `OnenexiumAgent.exe configure` = setup only.
+- **Keep it running after reboot / Task Manager:** run **`Install-OnenexiumAgentPersistence.ps1`** once (see `packaging/windows/` or monorepo `releases/` after build).
 
 ## Nexium OS setup
 

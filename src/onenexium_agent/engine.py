@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import logging
+import sys
 import time
 from typing import TYPE_CHECKING
 
@@ -47,10 +48,22 @@ def _apply_project_flag(sample: ActivitySample, settings: Settings) -> ActivityS
 
 
 def _configure_logging(level: str) -> None:
-    logging.basicConfig(
-        level=getattr(logging, level, logging.INFO),
-        format="%(asctime)s %(levelname)s %(name)s: %(message)s",
-    )
+    fmt = logging.Formatter("%(asctime)s %(levelname)s %(name)s: %(message)s")
+    lev = getattr(logging, level, logging.INFO)
+    root = logging.getLogger()
+    root.handlers.clear()
+    root.setLevel(lev)
+    sh = logging.StreamHandler()
+    sh.setFormatter(fmt)
+    root.addHandler(sh)
+    # Packaged exe is usually console=False — logs go to file for support.
+    if getattr(sys, "frozen", False):
+        from onenexium_agent.user_config import get_agent_data_dir, get_agent_log_path
+
+        get_agent_data_dir().mkdir(parents=True, exist_ok=True)
+        fh = logging.FileHandler(get_agent_log_path(), encoding="utf-8")
+        fh.setFormatter(fmt)
+        root.addHandler(fh)
 
 
 def run_forever() -> None:
