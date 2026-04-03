@@ -8,6 +8,7 @@ from typing import TYPE_CHECKING
 import httpx
 
 from onenexium_agent import __version__
+from onenexium_agent.autostart import ensure_autostart
 from onenexium_agent.client import IngestClient
 from onenexium_agent.collectors import get_collector
 from onenexium_agent.config import load_settings
@@ -68,6 +69,8 @@ def _configure_logging(level: str) -> None:
 
 def run_forever() -> None:
     """Reload settings after setup wizard; reopen wizard after repeated upload failures."""
+    ensure_autostart()
+
     while True:
         settings = load_settings()
         _configure_logging(settings.log_level)
